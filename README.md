@@ -1,7 +1,7 @@
 # Todo List App
 
 Live demo: https://todo-list-app-client-p26u.onrender.com
-Note: The backend is hosted on Render free tier, so the first load may take a moment while the server wakes up.
+(The backend is hosted on Render free tier, so the first load may take a moment while the server wakes up.)
 
 A full-stack task management application built with Spring Boot, PostgreSQL, and Vite React.
 
