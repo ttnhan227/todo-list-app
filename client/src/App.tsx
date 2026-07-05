@@ -9,13 +9,21 @@ import {
 import { TodoFilters } from "./components/TodoFilters";
 import { TodoForm } from "./components/TodoForm";
 import { TodoList } from "./components/TodoList";
+import { TodoPagination } from "./components/TodoPagination";
 import type { TodoRequestViewModel, TodoViewModel } from "./viewmodels/todoViewModel";
 import "./App.css";
+
+const PAGE_SIZE = 5;
 
 function App() {
   const [todos, setTodos] = useState<TodoViewModel[]>([]);
   const [search, setSearch] = useState("");
   const [completedFilter, setCompletedFilter] = useState<boolean | null>(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isFirstPage, setIsFirstPage] = useState(true);
+  const [isLastPage, setIsLastPage] = useState(true);
   const [editingTodo, setEditingTodo] = useState<TodoViewModel | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,18 +43,39 @@ function App() {
     try {
       setIsLoading(true);
       setError("");
-      const data = await getTodos(search, completedFilter);
-      setTodos(data);
+      const data = await getTodos(search, completedFilter, currentPage, PAGE_SIZE);
+
+      if (data.content.length === 0 && data.totalElements > 0 && currentPage > 0) {
+        setCurrentPage(Math.max(data.totalPages - 1, 0));
+        return;
+      }
+
+      setTodos(data.content);
+      setCurrentPage(data.page);
+      setTotalElements(data.totalElements);
+      setTotalPages(data.totalPages);
+      setIsFirstPage(data.first);
+      setIsLastPage(data.last);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to load tasks.");
     } finally {
       setIsLoading(false);
     }
-  }, [search, completedFilter]);
+  }, [search, completedFilter, currentPage]);
 
   useEffect(() => {
     void loadTodos();
   }, [loadTodos]);
+
+  function handleSearchChange(value: string) {
+    setSearch(value);
+    setCurrentPage(0);
+  }
+
+  function handleCompletedFilterChange(value: boolean | null) {
+    setCompletedFilter(value);
+    setCurrentPage(0);
+  }
 
   async function handleSubmit(todo: TodoRequestViewModel) {
     try {
@@ -58,6 +87,11 @@ function App() {
         setEditingTodo(null);
       } else {
         await createTodo(todo);
+
+        if (currentPage > 0) {
+          setCurrentPage(0);
+          return;
+        }
       }
 
       await loadTodos();
@@ -102,7 +136,7 @@ function App() {
         <div className="stats" aria-label="Task summary">
           <div>
             <span>{stats.total}</span>
-            <p>Total</p>
+            <p>Showing</p>
           </div>
           <div>
             <span>{stats.active}</span>
@@ -129,8 +163,8 @@ function App() {
           <TodoFilters
             search={search}
             completedFilter={completedFilter}
-            onSearchChange={setSearch}
-            onCompletedFilterChange={setCompletedFilter}
+            onSearchChange={handleSearchChange}
+            onCompletedFilterChange={handleCompletedFilterChange}
           />
           <TodoList
             todos={todos}
@@ -138,6 +172,14 @@ function App() {
             onToggleCompleted={handleToggleCompleted}
             onEdit={setEditingTodo}
             onDelete={handleDelete}
+          />
+          <TodoPagination
+            page={currentPage}
+            totalPages={totalPages}
+            totalElements={totalElements}
+            isFirst={isFirstPage}
+            isLast={isLastPage}
+            onPageChange={setCurrentPage}
           />
         </div>
       </section>

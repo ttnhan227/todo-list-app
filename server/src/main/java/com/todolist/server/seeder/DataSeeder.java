@@ -28,16 +28,16 @@ public class DataSeeder implements CommandLineRunner {
         }
 
         List<Todo> todos = List.of(
-                new Todo("Review project requirements", "Read the assignment carefully and list the required features before coding."),
-                new Todo("Design todo API endpoints", "Define routes for creating, updating, deleting, filtering, and completing todos."),
-                new Todo("Set up PostgreSQL database", "Create the local todolist database and confirm the server can connect successfully."),
-                new Todo("Create request validation rules", "Reject empty titles and limit long text before data reaches the service layer."),
-                new Todo("Build todo list screen", "Show tasks clearly with completion status, actions, and empty-state handling."),
-                new Todo("Add search and status filters", "Allow users to find tasks by text and filter by completed or active status."),
-                new Todo("Test invalid API requests", "Check missing titles, unknown IDs, and invalid query values return clear errors."),
-                new Todo("Write README run steps", "Document database setup, backend commands, frontend commands, and environment notes."),
-                new Todo("Polish responsive layout", "Make sure the todo interface works comfortably on desktop and mobile screens."),
-                new Todo("Prepare final GitHub submission", "Review source structure, commit changes, and make sure setup instructions are complete.")
+                new Todo("Buy groceries", "Pick up vegetables, eggs, milk, and rice for the week."),
+                new Todo("Do laundry", "Wash clothes, dry them, and fold everything before evening."),
+                new Todo("Clean the kitchen", "Wipe the counters, wash dishes, and take out the trash."),
+                new Todo("Pay electricity bill", "Check the bill amount and complete the payment before the due date."),
+                new Todo("Water the plants", "Water indoor plants and move them near sunlight for a few hours."),
+                new Todo("Plan tomorrow's meals", "Choose simple breakfast, lunch, and dinner options."),
+                new Todo("Call family", "Check in with family and ask how their week is going."),
+                new Todo("Exercise for 30 minutes", "Go for a walk, stretch, or do a short home workout."),
+                new Todo("Read a book", "Read one chapter before going to sleep."),
+                new Todo("Prepare work bag", "Pack keys, wallet, charger, notebook, and water bottle.")
         );
 
         todoRepository.saveAll(todos);

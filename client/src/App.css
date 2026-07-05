@@ -297,6 +297,27 @@ textarea:focus {
   text-align: center;
 }
 
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid var(--border);
+  padding: 16px 18px;
+}
+
+.pagination p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pagination div {
+  display: flex;
+  gap: 8px;
+}
+
 @media (max-width: 900px) {
   .page-header,
   .workspace {
@@ -309,8 +330,14 @@ textarea:focus {
 
   .stats,
   .filters,
-  .todo-item {
+  .todo-item,
+  .pagination {
     grid-template-columns: 1fr;
+  }
+
+  .pagination {
+    display: grid;
+    align-items: stretch;
   }
 
   .status-filter {
@@ -323,6 +350,11 @@ textarea:focus {
 
   .todo-actions .button {
     flex: 1;
+  }
+
+  .pagination div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -339,7 +371,8 @@ textarea:focus {
   .stats div,
   .todo-form,
   .filters,
-  .todo-item {
+  .todo-item,
+  .pagination {
     padding: 14px;
   }
 }

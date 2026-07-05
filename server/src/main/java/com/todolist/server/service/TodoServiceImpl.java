@@ -1,16 +1,17 @@
 package com.todolist.server.service;
 
+import com.todolist.server.dto.TodoPageResponse;
 import com.todolist.server.dto.TodoRequest;
 import com.todolist.server.dto.TodoResponse;
 import com.todolist.server.exception.ResourceNotFoundException;
 import com.todolist.server.model.Todo;
 import com.todolist.server.repository.TodoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class  TodoServiceImpl implements TodoService {
+public class TodoServiceImpl implements TodoService {
 
     private final TodoRepository todoRepository;
 
@@ -19,13 +20,23 @@ public class  TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public List<TodoResponse> getTodos(String search, Boolean completed) {
+    public TodoPageResponse getTodos(String search, Boolean completed, int page, int size) {
         String normalizedSearch = normalizeSearch(search);
+        PageRequest pageRequest = PageRequest.of(validatePage(page), validateSize(size));
+        Page<Todo> todoPage = findTodos(normalizedSearch, completed, pageRequest);
 
-        return findTodos(normalizedSearch, completed)
-                .stream()
-                .map(this::toResponse)
-                .toList();
+        return new TodoPageResponse(
+                todoPage.getContent()
+                        .stream()
+                        .map(this::toResponse)
+                        .toList(),
+                todoPage.getNumber(),
+                todoPage.getSize(),
+                todoPage.getTotalElements(),
+                todoPage.getTotalPages(),
+                todoPage.isFirst(),
+                todoPage.isLast()
+        );
     }
 
     @Override
@@ -71,29 +82,47 @@ public class  TodoServiceImpl implements TodoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Todo not found with id: " + id));
     }
 
-    private List<Todo> findTodos(String search, Boolean completed) {
+    private Page<Todo> findTodos(String search, Boolean completed, PageRequest pageRequest) {
         if (search != null && completed != null) {
             return todoRepository
                     .findByCompletedAndTitleContainingIgnoreCaseOrCompletedAndDescriptionContainingIgnoreCaseOrderByCreatedAtDesc(
                             completed,
                             search,
                             completed,
-                            search
+                            search,
+                            pageRequest
                     );
         }
 
         if (search != null) {
             return todoRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrderByCreatedAtDesc(
                     search,
-                    search
+                    search,
+                    pageRequest
             );
         }
 
         if (completed != null) {
-            return todoRepository.findByCompletedOrderByCreatedAtDesc(completed);
+            return todoRepository.findByCompletedOrderByCreatedAtDesc(completed, pageRequest);
         }
 
-        return todoRepository.findAllByOrderByCreatedAtDesc();
+        return todoRepository.findAllByOrderByCreatedAtDesc(pageRequest);
+    }
+
+    private int validatePage(int page) {
+        if (page < 0) {
+            throw new IllegalArgumentException("Page must be zero or greater");
+        }
+
+        return page;
+    }
+
+    private int validateSize(int size) {
+        if (size < 1 || size > 50) {
+            throw new IllegalArgumentException("Page size must be between 1 and 50");
+        }
+
+        return size;
     }
 
     private TodoResponse toResponse(Todo todo) {

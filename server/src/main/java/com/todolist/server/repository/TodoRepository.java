@@ -1,25 +1,27 @@
 package com.todolist.server.repository;
 
 import com.todolist.server.model.Todo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 public interface TodoRepository extends JpaRepository<Todo, Long> {
 
-    List<Todo> findAllByOrderByCreatedAtDesc();
+    Page<Todo> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
-    List<Todo> findByCompletedOrderByCreatedAtDesc(Boolean completed);
+    Page<Todo> findByCompletedOrderByCreatedAtDesc(Boolean completed, Pageable pageable);
 
-    List<Todo> findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrderByCreatedAtDesc(
+    Page<Todo> findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrderByCreatedAtDesc(
             String title,
-            String description
+            String description,
+            Pageable pageable
     );
 
-    List<Todo> findByCompletedAndTitleContainingIgnoreCaseOrCompletedAndDescriptionContainingIgnoreCaseOrderByCreatedAtDesc(
+    Page<Todo> findByCompletedAndTitleContainingIgnoreCaseOrCompletedAndDescriptionContainingIgnoreCaseOrderByCreatedAtDesc(
             Boolean completedForTitle,
             String title,
             Boolean completedForDescription,
-            String description
+            String description,
+            Pageable pageable
     );
 }

@@ -1,6 +1,7 @@
 import { API_BASE_URL } from "./apiConfig";
 import type {
   ErrorResponseViewModel,
+  TodoPageViewModel,
   TodoRequestViewModel,
   TodoViewModel,
 } from "../viewmodels/todoViewModel";
@@ -42,7 +43,7 @@ async function getErrorMessage(response: Response) {
   }
 }
 
-export function getTodos(search?: string, completed?: boolean | null) {
+export function getTodos(search?: string, completed?: boolean | null, page = 0, size = 5) {
   const params = new URLSearchParams();
 
   if (search?.trim()) {
@@ -53,10 +54,13 @@ export function getTodos(search?: string, completed?: boolean | null) {
     params.set("completed", String(completed));
   }
 
+  params.set("page", String(page));
+  params.set("size", String(size));
+
   const queryString = params.toString();
   const url = queryString ? `${TODO_API_URL}?${queryString}` : TODO_API_URL;
 
-  return request<TodoViewModel[]>(url);
+  return request<TodoPageViewModel>(url);
 }
 
 export function createTodo(todo: TodoRequestViewModel) {

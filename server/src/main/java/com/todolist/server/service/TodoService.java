@@ -1,13 +1,12 @@
 package com.todolist.server.service;
 
 import com.todolist.server.dto.TodoRequest;
+import com.todolist.server.dto.TodoPageResponse;
 import com.todolist.server.dto.TodoResponse;
-
-import java.util.List;
 
 public interface TodoService {
 
-    List<TodoResponse> getTodos(String search, Boolean completed);
+    TodoPageResponse getTodos(String search, Boolean completed, int page, int size);
 
     TodoResponse getTodoById(Long id);
 

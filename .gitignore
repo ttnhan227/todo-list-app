@@ -27,6 +27,4 @@ build/
 
 # Test / coverage
 coverage/
-start-dev.ps1
-start-dev.bat
 requirements.txt

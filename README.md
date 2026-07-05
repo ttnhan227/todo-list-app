@@ -11,9 +11,12 @@ A full-stack task management application built with Spring Boot, PostgreSQL, and
 - Mark todos as completed or active
 - Search todos by title or description
 - Filter todos by status
+- Paginate todos
 - Responsive client UI
 - Backend validation and structured error responses
-- Seed data for local development
+- Daily task seed data for local development
+- Docker setup for PostgreSQL, backend, and frontend
+- Backend unit tests for service logic
 
 ## Tech Stack
 
@@ -39,6 +42,7 @@ A full-stack task management application built with Spring Boot, PostgreSQL, and
 todo-list-app/
   server/          Spring Boot REST API
   client/          Vite React client
+  docker-compose.yml
   README.md        Setup and run instructions
 ```
 
@@ -49,8 +53,47 @@ Install these before running the project:
 - Java 21
 - Node.js and npm
 - PostgreSQL
+- Docker Desktop, optional for Docker setup
 
 Maven does not need to be installed separately because the backend includes Maven Wrapper.
+
+## Run With Docker
+
+Start PostgreSQL, the Spring Boot API, and the React client:
+
+```bash
+docker compose up --build
+```
+
+Open:
+
+```text
+http://localhost:5173
+```
+
+The backend runs at:
+
+```text
+http://localhost:8080
+```
+
+Stop the containers:
+
+```bash
+docker compose down
+```
+
+Remove the database volume too:
+
+```bash
+docker compose down -v
+```
+
+Docker services:
+
+- `db`: PostgreSQL database
+- `server`: Spring Boot API on `http://localhost:8080`
+- `client`: Vite React client on `http://localhost:5173`
 
 ## Database Setup
 
@@ -70,7 +113,24 @@ spring.datasource.password=123
 
 Update `server/src/main/resources/application.properties` if your local PostgreSQL username or password is different.
 
+The backend also supports environment variables:
+
+```properties
+SPRING_DATASOURCE_URL
+SPRING_DATASOURCE_USERNAME
+SPRING_DATASOURCE_PASSWORD
+APP_CORS_ALLOWED_ORIGINS
+```
+
+The frontend supports this environment variable:
+
+```properties
+VITE_API_BASE_URL
+```
+
 ## Run The Project
+
+Use these steps if you are not using Docker.
 
 Start the backend:
 
@@ -106,6 +166,49 @@ The backend runs at:
 http://localhost:8080
 ```
 
+## Run Tests
+
+Run backend tests:
+
+```bash
+cd server
+./mvnw test
+```
+
+On Windows:
+
+```bat
+cd server
+mvnw.cmd test
+```
+
+The unit tests cover todo service pagination, invalid pagination input, todo creation cleanup, completion updates, and missing todo IDs.
+
+## Deployment Notes
+
+For deployment, configure the backend database and CORS values with environment variables.
+
+Backend environment variables:
+
+```text
+SPRING_DATASOURCE_URL=jdbc:postgresql://your-db-host:5432/your-db-name
+SPRING_DATASOURCE_USERNAME=your-db-user
+SPRING_DATASOURCE_PASSWORD=your-db-password
+APP_CORS_ALLOWED_ORIGINS=https://your-frontend-url
+```
+
+Frontend environment variable:
+
+```text
+VITE_API_BASE_URL=https://your-backend-url/api
+```
+
+For multiple allowed frontend origins, separate values with commas:
+
+```text
+APP_CORS_ALLOWED_ORIGINS=http://localhost:5173,https://your-frontend-url
+```
+
 ## API Endpoints
 
 Base URL:
@@ -116,9 +219,10 @@ http://localhost:8080/api/todos
 
 | Method | Endpoint | Description |
 | --- | --- | --- |
-| GET | `/api/todos` | Get all todos |
+| GET | `/api/todos?page=0&size=5` | Get paginated todos |
 | GET | `/api/todos?search=api` | Search todos |
 | GET | `/api/todos?completed=true` | Filter completed todos |
+| GET | `/api/todos?search=api&completed=false&page=0&size=5` | Search, filter, and paginate todos |
 | GET | `/api/todos/{id}` | Get todo by ID |
 | POST | `/api/todos` | Create todo |
 | PUT | `/api/todos/{id}` | Update todo |
@@ -129,8 +233,8 @@ http://localhost:8080/api/todos
 
 ```json
 {
-  "title": "Write README run steps",
-  "description": "Document backend, frontend, and database setup."
+  "title": "Buy groceries",
+  "description": "Pick up vegetables, eggs, milk, and rice for the week."
 }
 ```
 

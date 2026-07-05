@@ -1,14 +1,13 @@
 package com.todolist.server.controller;
 
 import com.todolist.server.dto.TodoRequest;
+import com.todolist.server.dto.TodoPageResponse;
 import com.todolist.server.dto.TodoResponse;
 import com.todolist.server.service.TodoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/todos")
@@ -21,11 +20,13 @@ public class TodoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TodoResponse>> getTodos(
+    public ResponseEntity<TodoPageResponse> getTodos(
             @RequestParam(required = false) String search,
-            @RequestParam(required = false) Boolean completed
+            @RequestParam(required = false) Boolean completed,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
     ) {
-        return ResponseEntity.ok(todoService.getTodos(search, completed));
+        return ResponseEntity.ok(todoService.getTodos(search, completed, page, size));
     }
 
     @GetMapping("/{id}")

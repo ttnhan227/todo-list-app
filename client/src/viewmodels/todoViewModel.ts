@@ -7,6 +7,16 @@ export type TodoViewModel = {
   updatedAt: string;
 };
 
+export type TodoPageViewModel = {
+  content: TodoViewModel[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  first: boolean;
+  last: boolean;
+};
+
 export type TodoRequestViewModel = {
   title: string;
   description: string;
