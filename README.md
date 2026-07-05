@@ -1,5 +1,7 @@
 # Todo List App
 
+Live demo: https://todo-list-app-client-p26u.onrender.com
+
 A full-stack task management application built with Spring Boot, PostgreSQL, and Vite React.
 
 ## Features
@@ -17,6 +19,7 @@ A full-stack task management application built with Spring Boot, PostgreSQL, and
 - Daily task seed data for local development
 - Docker setup for PostgreSQL, backend, and frontend
 - Backend unit tests for service logic
+- Deployment-ready environment configuration
 
 ## Tech Stack
 
@@ -183,31 +186,6 @@ mvnw.cmd test
 ```
 
 The unit tests cover todo service pagination, invalid pagination input, todo creation cleanup, completion updates, and missing todo IDs.
-
-## Deployment Notes
-
-For deployment, configure the backend database and CORS values with environment variables.
-
-Backend environment variables:
-
-```text
-SPRING_DATASOURCE_URL=jdbc:postgresql://your-db-host:5432/your-db-name
-SPRING_DATASOURCE_USERNAME=your-db-user
-SPRING_DATASOURCE_PASSWORD=your-db-password
-APP_CORS_ALLOWED_ORIGINS=https://your-frontend-url
-```
-
-Frontend environment variable:
-
-```text
-VITE_API_BASE_URL=https://your-backend-url/api
-```
-
-For multiple allowed frontend origins, separate values with commas:
-
-```text
-APP_CORS_ALLOWED_ORIGINS=http://localhost:5173,https://your-frontend-url
-```
 
 ## API Endpoints
 
