@@ -61,44 +61,6 @@ Install these before running the project:
 
 Maven does not need to be installed separately because the backend includes Maven Wrapper.
 
-## Run With Docker
-
-Start PostgreSQL, the Spring Boot API, and the React client:
-
-```bash
-docker compose up --build
-```
-
-Open:
-
-```text
-http://localhost:5173
-```
-
-The backend runs at:
-
-```text
-http://localhost:8080
-```
-
-Stop the containers:
-
-```bash
-docker compose down
-```
-
-Remove the database volume too:
-
-```bash
-docker compose down -v
-```
-
-Docker services:
-
-- `db`: PostgreSQL database
-- `server`: Spring Boot API on `http://localhost:8080`
-- `client`: Vite React client on `http://localhost:5173`
-
 ## Database Setup
 
 Create a PostgreSQL database named `todolist`:
@@ -111,11 +73,11 @@ The backend uses this local configuration:
 
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/todolist
-spring.datasource.username=postgres
-spring.datasource.password=123
+spring.datasource.username=<your-postgres-username>
+spring.datasource.password=<your-postgres-password>
 ```
 
-Update `server/src/main/resources/application.properties` if your local PostgreSQL username or password is different.
+Use the username and password from your local PostgreSQL setup.
 
 The backend also supports environment variables:
 
@@ -170,6 +132,44 @@ The backend runs at:
 http://localhost:8080
 ```
 
+## Run With Docker
+
+Start PostgreSQL, the Spring Boot API, and the React client:
+
+```bash
+docker compose up --build
+```
+
+Open:
+
+```text
+http://localhost:5173
+```
+
+The backend runs at:
+
+```text
+http://localhost:8080
+```
+
+Stop the containers:
+
+```bash
+docker compose down
+```
+
+Remove the database volume too:
+
+```bash
+docker compose down -v
+```
+
+Docker services:
+
+- `db`: PostgreSQL database
+- `server`: Spring Boot API on `http://localhost:8080`
+- `client`: Vite React client on `http://localhost:5173`
+
 ## Run Tests
 
 Run backend tests:
@@ -199,9 +199,9 @@ http://localhost:8080/api/todos
 | Method | Endpoint | Description |
 | --- | --- | --- |
 | GET | `/api/todos?page=0&size=5` | Get paginated todos |
-| GET | `/api/todos?search=api` | Search todos |
+| GET | `/api/todos?search=groceries` | Search todos |
 | GET | `/api/todos?completed=true` | Filter completed todos |
-| GET | `/api/todos?search=api&completed=false&page=0&size=5` | Search, filter, and paginate todos |
+| GET | `/api/todos?search=groceries&completed=false&page=0&size=5` | Search, filter, and paginate todos |
 | GET | `/api/todos/{id}` | Get todo by ID |
 | POST | `/api/todos` | Create todo |
 | PUT | `/api/todos/{id}` | Update todo |
@@ -229,4 +229,4 @@ Invalid requests return structured JSON error responses.
 
 ## Notes
 
-On first run, the backend creates the `todos` table automatically and seeds sample todo records if the table is empty.
+On first run, the backend creates the `todos` table automatically and seeds 20 daily todo records if the table is empty.

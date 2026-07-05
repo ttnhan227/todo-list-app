@@ -35,7 +35,7 @@ class TodoServiceImplTest {
 
     @Test
     void getTodosReturnsPaginatedTodos() {
-        Todo todo = new Todo("Review code", "Check pagination behavior");
+        Todo todo = new Todo("Buy groceries", "Pick up vegetables and milk");
         PageRequest pageRequest = PageRequest.of(0, 5);
 
         when(todoRepository.findAllByOrderByCreatedAtDesc(any(PageRequest.class)))
@@ -44,7 +44,7 @@ class TodoServiceImplTest {
         TodoPageResponse response = todoService.getTodos(null, null, 0, 5);
 
         assertThat(response.content()).hasSize(1);
-        assertThat(response.content().getFirst().title()).isEqualTo("Review code");
+        assertThat(response.content().getFirst().title()).isEqualTo("Buy groceries");
         assertThat(response.page()).isZero();
         assertThat(response.size()).isEqualTo(5);
         assertThat(response.totalElements()).isEqualTo(12);
@@ -72,21 +72,21 @@ class TodoServiceImplTest {
         when(todoRepository.save(any(Todo.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         TodoResponse response = todoService.createTodo(
-                new TodoRequest("  Write tests  ", "  Cover service logic  ")
+                new TodoRequest("  Clean kitchen  ", "  Wash dishes and wipe the counter  ")
         );
 
         ArgumentCaptor<Todo> todoCaptor = ArgumentCaptor.forClass(Todo.class);
         verify(todoRepository).save(todoCaptor.capture());
 
-        assertThat(todoCaptor.getValue().getTitle()).isEqualTo("Write tests");
-        assertThat(todoCaptor.getValue().getDescription()).isEqualTo("Cover service logic");
-        assertThat(response.title()).isEqualTo("Write tests");
-        assertThat(response.description()).isEqualTo("Cover service logic");
+        assertThat(todoCaptor.getValue().getTitle()).isEqualTo("Clean kitchen");
+        assertThat(todoCaptor.getValue().getDescription()).isEqualTo("Wash dishes and wipe the counter");
+        assertThat(response.title()).isEqualTo("Clean kitchen");
+        assertThat(response.description()).isEqualTo("Wash dishes and wipe the counter");
     }
 
     @Test
     void updateCompletedChangesStatus() {
-        Todo todo = new Todo("Ship project", null);
+        Todo todo = new Todo("Water plants", null);
         when(todoRepository.findById(1L)).thenReturn(Optional.of(todo));
         when(todoRepository.save(any(Todo.class))).thenAnswer(invocation -> invocation.getArgument(0));
 

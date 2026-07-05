@@ -1,7 +1,7 @@
 .app-shell {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 40px 0;
+  padding: 36px 0 48px;
 }
 
 .page-header {
@@ -9,7 +9,12 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: var(--panel-shadow);
+  padding: 24px;
 }
 
 .eyebrow {
@@ -23,6 +28,7 @@
 .page-header h1 {
   max-width: 640px;
   margin: 0;
+  letter-spacing: 0;
 }
 
 .stats {
@@ -36,6 +42,7 @@
   border-radius: 8px;
   background: var(--surface);
   padding: 14px 16px;
+  box-shadow: var(--subtle-shadow);
 }
 
 .stats span {
@@ -78,6 +85,7 @@
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface);
+  box-shadow: var(--panel-shadow);
 }
 
 .todo-form {
@@ -125,6 +133,10 @@ textarea {
   line-height: 1.4;
   outline: none;
   padding: 11px 12px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
 }
 
 textarea {
@@ -147,7 +159,9 @@ textarea:focus {
   transition:
     background 0.2s,
     border-color 0.2s,
-    color 0.2s;
+    color 0.2s,
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .button {
@@ -163,10 +177,12 @@ textarea:focus {
 .button-primary {
   background: var(--accent);
   color: #ffffff;
+  box-shadow: 0 8px 18px rgba(15, 118, 110, 0.2);
 }
 
 .button-primary:hover:not(:disabled) {
   background: var(--accent-dark);
+  transform: translateY(-1px);
 }
 
 .button-secondary {
@@ -178,16 +194,17 @@ textarea:focus {
 .button-secondary:hover {
   border-color: var(--accent);
   color: var(--accent);
+  background: #f0fdfa;
 }
 
 .button-danger {
-  border-color: #f0b8b8;
-  background: #fff7f7;
-  color: #b42323;
+  border-color: #fed7aa;
+  background: var(--warning-soft);
+  color: var(--warning);
 }
 
 .button-danger:hover {
-  background: #ffecec;
+  background: #ffedd5;
 }
 
 .task-panel {
@@ -223,7 +240,7 @@ textarea:focus {
 
 .filter-button.active {
   background: var(--surface);
-  color: var(--text-strong);
+  color: var(--accent-dark);
   box-shadow: var(--subtle-shadow);
 }
 
@@ -239,6 +256,11 @@ textarea:focus {
   border-bottom: 1px solid var(--border);
   padding: 18px;
   text-align: left;
+  transition: background 0.2s;
+}
+
+.todo-item:hover {
+  background: #fbfcfd;
 }
 
 .todo-item:last-child {
@@ -258,6 +280,7 @@ textarea:focus {
   width: 18px;
   height: 18px;
   accent-color: var(--accent);
+  cursor: pointer;
 }
 
 .todo-content h3 {
@@ -303,6 +326,7 @@ textarea:focus {
   justify-content: space-between;
   gap: 12px;
   border-top: 1px solid var(--border);
+  background: #fbfcfd;
   padding: 16px 18px;
 }
 

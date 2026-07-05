@@ -73,7 +73,7 @@ export function TodoForm({ editingTodo, isSubmitting, onSubmit, onCancelEdit }: 
           value={title}
           maxLength={120}
           onChange={(event) => setTitle(event.target.value)}
-          placeholder="Review API validation"
+          placeholder="Enter task title"
         />
       </label>
 
@@ -83,7 +83,7 @@ export function TodoForm({ editingTodo, isSubmitting, onSubmit, onCancelEdit }: 
           value={description}
           maxLength={500}
           onChange={(event) => setDescription(event.target.value)}
-          placeholder="Add useful context for this task"
+          placeholder="Add optional details"
           rows={4}
         />
       </label>
